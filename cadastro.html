@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastro de Produtos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <a href="cadastro.html" class="active">📦 Produtos</a>
+    <a href="lista.html">🛒 Lista de Compras</a>
+  </nav>
+
+  <div class="card">
+
+    <div class="page-header">
+      <h1>Cadastro de <span>Produtos</span></h1>
+      <p>Adicione produtos ao seu catálogo para usar na lista de compras.</p>
+    </div>
+
+    <div class="input-group">
+      <label for="nome">Nome do Produto</label>
+      <input type="text" id="nome" placeholder="Ex: Arroz 5kg" />
+    </div>
+
+    <div class="input-group">
+      <label for="valor">Preço Unitário (R$)</label>
+      <input type="text" id="valor" placeholder="R$ 0,00" inputmode="numeric" />
+    </div>
+
+    <button class="btn" id="btnSalvar">+ Cadastrar Produto</button>
+
+    <div class="divider"></div>
+
+    <p class="section-title">Produtos cadastrados</p>
+
+    <div id="listaProdutos">
+      <p class="empty">Nenhum produto cadastrado ainda.</p>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="cadastro.js"></script>
+</body>
+</html>
