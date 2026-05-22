@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Lista de Compras</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Dashboard específico ── */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.1rem;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.45s ease both;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .stat-card.green::before  { background: linear-gradient(90deg, var(--accent), #22c55e); }
+    .stat-card.gold::before   { background: linear-gradient(90deg, var(--accent-2), #f59e0b); }
+    .stat-card.blue::before   { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+
+    .stat-card .stat-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      display: block;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-card .stat-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .stat-card.green .stat-value { color: var(--accent); }
+    .stat-card.gold  .stat-value { color: var(--accent-2); }
+    .stat-card.blue  .stat-value { color: #60a5fa; }
+
+    /* ── Top itens ── */
+    .top-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+      gap: 1rem;
+      animation: slideIn 0.3s ease both;
+    }
+
+    .top-item:last-child { border-bottom: none; }
+
+    .top-item .rank {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: var(--border);
+      min-width: 24px;
+    }
+
+    .top-item:first-child .rank { color: var(--accent-2); }
+    .top-item:nth-child(2) .rank { color: var(--text-muted); }
+
+    .top-item .nome {
+      flex: 1;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .top-item .valor {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    /* ── Barra de faixas ── */
+    .faixa-item {
+      margin-bottom: 1rem;
+    }
+
+    .faixa-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .faixa-header span:last-child {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .faixa-bar {
+      height: 8px;
+      background: var(--surface-3);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .faixa-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 0%;
+    }
+
+    .faixa-fill.green { background: linear-gradient(90deg, var(--accent), #22c55e); }
+    .faixa-fill.gold  { background: linear-gradient(90deg, var(--accent-2), #f59e0b); }
+    .faixa-fill.blue  { background: linear-gradient(90deg, #60a5fa, #3b82f6); }
+
+    /* ── Botões de ação ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      text-decoration: none;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .action-btn .icon { font-size: 1.1rem; }
+
+    /* ── Responsive ── */
+    @media (max-width: 540px) {
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .action-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="active">📊 Dashboard</a>
+    <a href="cadastro.html">📦 Produtos</a>
+    <a href="lista.html">🛒 Lista</a>
+  </nav>
+
+  <div class="card">
+
+    <div class="page-header">
+      <h1>Olá, <span>Família!</span> 👋</h1>
+      <p id="dataAtual"></p>
+    </div>
+
+    <!-- Cards de estatísticas -->
+    <div class="dashboard-grid">
+      <div class="stat-card green">
+        <span class="stat-icon">💰</span>
+        <div class="stat-label">Total da lista</div>
+        <div class="stat-value" id="valorTotal">—</div>
+      </div>
+      <div class="stat-card gold">
+        <span class="stat-icon">🛒</span>
+        <div class="stat-label">Itens na lista</div>
+        <div class="stat-value" id="totalItens">—</div>
+      </div>
+      <div class="stat-card blue">
+        <span class="stat-icon">📦</span>
+        <div class="stat-label">Produtos</div>
+        <div class="stat-value" id="totalProdutos">—</div>
+      </div>
+    </div>
+
+    <!-- Top 5 maiores gastos -->
+    <p class="section-title">🏆 Maiores gastos</p>
+
+    <div id="topItens">
+      <p class="empty">Nenhum item na lista ainda.</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Faixas de preço -->
+    <p class="section-title">📈 Itens por faixa de preço</p>
+
+    <div id="faixas"></div>
+
+    <div class="divider"></div>
+
+    <!-- Ações rápidas -->
+    <p class="section-title">⚡ Ações rápidas</p>
+
+    <div class="action-grid">
+      <a href="lista.html" class="action-btn">
+        <span class="icon">🛒</span> Ir para lista
+      </a>
+      <a href="cadastro.html" class="action-btn">
+        <span class="icon">📦</span> Cadastrar produto
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    // Data atual
+    const data = new Date().toLocaleDateString("pt-BR", {
+      weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+    document.getElementById("dataAtual").textContent =
+      data.charAt(0).toUpperCase() + data.slice(1);
+
+    // Carregar dados do dashboard
+    fetch("dashboard.php")
+    .then(r => r.json())
+    .then(dados => {
+
+      // Stats
+      document.getElementById("valorTotal").textContent =
+        parseFloat(dados.valorTotal).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+      document.getElementById("totalItens").textContent = dados.totalItens;
+      document.getElementById("totalProdutos").textContent = dados.totalProdutos;
+
+      // Top itens
+      const topContainer = document.getElementById("topItens");
+      if (dados.topItens.length === 0) {
+        topContainer.innerHTML = '<p class="empty">Nenhum item na lista ainda.</p>';
+      } else {
+        topContainer.innerHTML = dados.topItens.map((item, i) => {
+          const valor = parseFloat(item.subtotal).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+          return `
+            <div class="top-item">
+              <span class="rank">#${i + 1}</span>
+              <span class="nome">${item.nome}</span>
+              <span class="valor">${valor}</span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      // Faixas de preço
+      const totalFaixas = Object.values(dados.faixas).reduce((a, b) => a + parseInt(b), 0);
+      const cores = ["green", "gold", "blue"];
+      const faixasContainer = document.getElementById("faixas");
+
+      if (totalFaixas === 0) {
+        faixasContainer.innerHTML = '<p class="empty">Nenhum item na lista ainda.</p>';
+      } else {
+        faixasContainer.innerHTML = Object.entries(dados.faixas).map(([label, qtd], i) => {
+          const pct = totalFaixas > 0 ? Math.round((parseInt(qtd) / totalFaixas) * 100) : 0;
+          return `
+            <div class="faixa-item">
+              <div class="faixa-header">
+                <span>${label}</span>
+                <span>${qtd} ${parseInt(qtd) === 1 ? "item" : "itens"} (${pct}%)</span>
+              </div>
+              <div class="faixa-bar">
+                <div class="faixa-fill ${cores[i]}" data-pct="${pct}"></div>
+              </div>
+            </div>
+          `;
+        }).join("");
+
+        // Animar barras
+        setTimeout(() => {
+          document.querySelectorAll(".faixa-fill").forEach(el => {
+            el.style.width = el.dataset.pct + "%";
+          });
+        }, 100);
+      }
+
+    })
+    .catch(() => {
+      console.log("Erro ao carregar dashboard.");
+    });
+  </script>
+
+</body>
+</html>
